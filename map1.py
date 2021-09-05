@@ -35,9 +35,11 @@ fg = folium.FeatureGroup(name='My Map')
 for lt, ln, el, nm in zip(lat, lon, elev, name):
     iframe = folium.IFrame(html=html % (nm, nm, el), width=200, height=100)
     fg.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), color=color_producer(el), fill_opacity=0.7, fill=True))
+    # fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon=folium.CustomIcon(icon_image='volcano.png', icon_size=(20,20))))
 
 fg.add_child(folium.GeoJson(data=(open('world.json', 'r', encoding='utf-8-sig').read()),  
 style_function=lambda x: {'fillColor':'red' if x['properties']['POP2005'] < 10000000 else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'yellow'}))
+
 #=> line breaks are allowed in python if within brackets
 
 map.add_child(fg)
