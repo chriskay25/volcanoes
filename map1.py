@@ -1,11 +1,11 @@
 import folium
 import pandas
 
-data = pandas.read_csv('Volcanoes.txt')
-lat = list(data['LAT'])
-lon = list(data['LON'])
-elev = list(data['ELEV'])
-name = list(data['NAME'])
+vdata = pandas.read_csv('Volcanoes.txt')
+vlat = list(vdata['LAT'])
+vlon = list(vdata['LON'])
+velev = list(vdata['ELEV'])
+vname = list(vdata['NAME'])
 
 html = '''
 <h4>Volcano Info:</h4>
@@ -23,7 +23,7 @@ def color_producer(elevation):
     else:
         return 'red'
 
-map = folium.Map(location=[lat[1], lon[1]], zoom_start=6, tiles='Stamen Terrain')
+map = folium.Map(location=[vlat[1], vlon[1]], zoom_start=6, tiles='Stamen Terrain')
 folium.TileLayer('Open Street Map').add_to(map)
 folium.TileLayer('Stamen Toner').add_to(map)
 folium.TileLayer('Stamen Water Color').add_to(map)
@@ -33,7 +33,7 @@ folium.TileLayer('cartodbdark_matter').add_to(map)
 fgv = folium.FeatureGroup(name='Volcanoes')
 
 # When iterating through two lists, need to use the zip fn
-for lt, ln, el, nm in zip(lat, lon, elev, name):
+for lt, ln, el, nm in zip(vlat, vlon, velev, vname):
     iframe = folium.IFrame(html=html % (nm, nm, el), width=200, height=100)
     fgv.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), color=color_producer(el), fill_opacity=0.7, fill=True))
     # fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon=folium.CustomIcon(icon_image='volcano.png', icon_size=(20,20))))
@@ -48,5 +48,4 @@ style_function=lambda x: {'fillColor':'red' if x['properties']['POP2005'] < 1000
 map.add_child(fgv)
 map.add_child(fgp)
 map.add_child(folium.LayerControl())
-# folium.LayerControl().add_to(map)
 map.save("Map1.html")
